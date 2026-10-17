@@ -248,11 +248,11 @@ def load_rules_table(conn, data: dict) -> int:
 def get_rule(conn, key: str, well_type: str | None = None, scope_id: str = "default") -> float | None:
     """Rule lookup: well-type scope first (when given), then global scope."""
     if well_type:
-        row = conn.execute("SELECT value_num FROM rules WHERE rule_key=? AND scope_type='well_type' "
+        row = conn.execute("SELECT value_num FROM rules_effective WHERE rule_key=? AND scope_type='well_type' "
                            "AND scope_id=?", (key, well_type)).fetchone()
         if row:
             return row["value_num"]
-    row = conn.execute("SELECT value_num FROM rules WHERE rule_key=? AND scope_type='global' AND scope_id=?",
+    row = conn.execute("SELECT value_num FROM rules_effective WHERE rule_key=? AND scope_type='global' AND scope_id=?",
                        (key, scope_id)).fetchone()
     return row["value_num"] if row else None
 

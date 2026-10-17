@@ -7,8 +7,25 @@ from . import config, metrics, rules
 
 
 def rule_value(conn, key: str, well_type: str | None = None, scope_id: str = "default") -> float | None:
-    """Single choke point for thresholds (Phase 3 layers user-defined well-type rules on top)."""
+    """Single choke point for thresholds: manual/SOP rules with confirmed user well-type rules layered on top."""
     return rules.get_rule(conn, key, well_type, scope_id)
+
+
+def rule_info(conn, key: str, well_type: str) -> dict:
+    """Value plus where it came from, so answers can say 'your rule' versus 'the manual'."""
+    r = conn.execute("SELECT * FROM rules_effective WHERE rule_key=? AND scope_type='well_type' AND scope_id=?",
+                     (key, well_type)).fetchone()
+    if r and str(r["source"]).startswith("user:"):
+        uid = r["source"][5:]
+        u = conn.execute("SELECT name FROM users WHERE user_id=?", (uid,)).fetchone()
+        m = conn.execute("SELECT value_num, source, section FROM rules WHERE rule_key=? AND scope_type='well_type' "
+                         "AND scope_id=?", (key, well_type)).fetchone()
+        return {"value": r["value_num"], "source": "user_rule", "fact_id": r["section"], "author_user_id": uid,
+                "author_name": u[0] if u else uid, "text": r["description"],
+                "manual_value": m["value_num"] if m else None,
+                "manual_source": f"{m['source']}#{m['section']}" if m else None}
+    return {"value": rule_value(conn, key, well_type), "source": "manual",
+            "manual_source": f"{r['source']}#{r['section']}" if r else None}
 
 
 def spill_class(conn, volume: float | None) -> str | None:
@@ -191,6 +208,7 @@ def rca_due(conn, scope: str, as_of: str | None = None) -> list[dict]:
     out = []
     for w in conn.execute(f"SELECT asset_id, well_type FROM wells WHERE asset_id IN ({metrics._in(sc['wells'])})", sc["wells"]):
         trig = rule_value(conn, "rca_trigger_corrective_count", w["well_type"])
+        rinfo = rule_info(conn, "rca_trigger_corrective_count", w["well_type"])
         months = rule_value(conn, "rca_window_months", w["well_type"]) or 12
         if not trig:
             continue
@@ -205,7 +223,10 @@ def rca_due(conn, scope: str, as_of: str | None = None) -> list[dict]:
             out.append({"well_id": w["asset_id"], "well_type": w["well_type"], "equipment_kind": r["equipment_kind"],
                         "corrective_repairs": r["n"], "trigger_count": int(trig), "window_months": int(months),
                         "report_marks_action_required": bool(r["action_flag"]),
+                        "rule_source": rinfo["source"],
+                        **({"user_rule": {k: rinfo[k] for k in ("fact_id", "author_name", "text", "manual_value")}}
+                           if rinfo["source"] == "user_rule" else {}),
                         "detail": f"{r['n']} corrective repairs on {r['equipment_kind']} in {int(months)} months "
-                                  f"(trigger {int(trig)}): root-cause analysis due",
+                                  f"(trigger {int(trig)}{', per ' + rinfo['author_name'] + chr(39) + 's rule, not the manual' if rinfo['source'] == 'user_rule' else ''}): root-cause analysis due",
                         "evidence": r["ids"].split(",")})
     return out

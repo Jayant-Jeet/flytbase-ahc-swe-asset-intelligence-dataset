@@ -53,6 +53,20 @@ CREATE TABLE IF NOT EXISTS corrections (
   new_value TEXT, original_value TEXT, source TEXT, source_ref TEXT, author_user_id TEXT,
   created_at TEXT, reason TEXT, status TEXT DEFAULT 'confirmed', dataset TEXT);
 CREATE INDEX IF NOT EXISTS ix_corr_ins ON corrections(inspection_id, field);
+-- Append-only shared knowledge. Status changes are new rows pointing at the old one via supersedes_id.
+CREATE TABLE IF NOT EXISTS facts (
+  seq INTEGER PRIMARY KEY AUTOINCREMENT, id TEXT UNIQUE, scope_type TEXT NOT NULL, scope_id TEXT NOT NULL,
+  text TEXT, payload TEXT, author_user_id TEXT, created_at TEXT, status TEXT NOT NULL,
+  supersedes_id TEXT, reason TEXT, original_value TEXT);
+CREATE INDEX IF NOT EXISTS ix_facts_scope ON facts(scope_type, scope_id);
+-- Private memory: conversations and messages are always filtered by user_id.
+CREATE TABLE IF NOT EXISTS conversations (
+  conv_id TEXT PRIMARY KEY, user_id TEXT NOT NULL, day TEXT, started_at TEXT, title TEXT);
+CREATE TABLE IF NOT EXISTS messages (
+  msg_id INTEGER PRIMARY KEY AUTOINCREMENT, conv_id TEXT, user_id TEXT NOT NULL, day TEXT, ts TEXT,
+  role TEXT, content TEXT, tool_name TEXT, tool_args TEXT, wells_json TEXT);
+CREATE INDEX IF NOT EXISTS ix_msg_user ON messages(user_id, day);
+CREATE TABLE IF NOT EXISTS kv (key TEXT PRIMARY KEY, value TEXT);
 CREATE TABLE IF NOT EXISTS doc_chunks (
   chunk_id TEXT PRIMARY KEY, doc_id TEXT, doc_type TEXT, path TEXT, asset_id TEXT,
   section TEXT, text TEXT);
@@ -61,13 +75,34 @@ CREATE TABLE IF NOT EXISTS doc_chunks (
 VIEWS = """
 DROP VIEW IF EXISTS inspection_effective;
 DROP VIEW IF EXISTS corrections_active;
+DROP VIEW IF EXISTS rules_effective;
+DROP VIEW IF EXISTS facts_current;
+CREATE VIEW facts_current AS
+SELECT f.* FROM facts f WHERE NOT EXISTS (SELECT 1 FROM facts g WHERE g.supersedes_id = f.id);
+
+-- Manual/SOP rules, with confirmed user rules for a well type taking precedence (latest wins).
+CREATE VIEW rules_effective AS
+SELECT r.rule_key, r.scope_type, r.scope_id, r.value_num, r.value_text, r.unit, r.source, r.section, r.description
+FROM rules r
+WHERE NOT (r.scope_type = 'well_type' AND EXISTS (
+  SELECT 1 FROM facts_current f WHERE f.scope_type = 'well_type' AND f.scope_id = r.scope_id
+    AND f.status = 'confirmed' AND json_extract(f.payload, '$.rule_key') = r.rule_key))
+UNION ALL
+SELECT json_extract(f.payload, '$.rule_key'), 'well_type', f.scope_id, json_extract(f.payload, '$.value'), NULL,
+       json_extract(f.payload, '$.unit'), 'user:' || f.author_user_id, f.id, f.text
+FROM facts_current f
+WHERE f.scope_type = 'well_type' AND f.status = 'confirmed' AND json_extract(f.payload, '$.rule_key') IS NOT NULL
+  AND NOT EXISTS (SELECT 1 FROM facts_current g WHERE g.scope_type = 'well_type' AND g.scope_id = f.scope_id
+    AND g.status = 'confirmed' AND json_extract(g.payload, '$.rule_key') = json_extract(f.payload, '$.rule_key')
+    AND g.seq > f.seq);
+
 CREATE VIEW corrections_active AS
 SELECT c.* FROM corrections c
 WHERE c.status IN ('confirmed', 'applied', 'unconfirmed_applied')
   AND c.rowid = (SELECT c2.rowid FROM corrections c2
                  WHERE c2.inspection_id = c.inspection_id AND c2.field = c.field
                    AND c2.status IN ('confirmed', 'applied', 'unconfirmed_applied')
-                 ORDER BY c2.created_at DESC, c2.rowid DESC LIMIT 1);
+                 ORDER BY (c2.source = 'user') DESC, c2.created_at DESC, c2.rowid DESC LIMIT 1);
 
 CREATE VIEW inspection_effective AS
 SELECT
@@ -94,7 +129,7 @@ SELECT
    OR cs.correction_id IS NOT NULL OR cv.correction_id IS NOT NULL) AS corrected
 FROM inspections i
 JOIN wells w ON w.asset_id = i.asset_id
-LEFT JOIN rules r ON r.rule_key = 'producing_min_delta_c' AND r.scope_type = 'well_type'
+LEFT JOIN rules_effective r ON r.rule_key = 'producing_min_delta_c' AND r.scope_type = 'well_type'
                  AND r.scope_id = w.well_type
 LEFT JOIN corrections_active cw ON cw.inspection_id = i.inspection_id AND cw.field = 'wellhead_temp_c'
 LEFT JOIN corrections_active ca ON ca.inspection_id = i.inspection_id AND ca.field = 'ambient_temp_c'
@@ -119,11 +154,15 @@ def init_schema(conn: sqlite3.Connection) -> None:
 
 def reset_data(conn: sqlite3.Connection) -> None:
     """Drop every table for a clean re-ingest."""
+    conn.executescript(TABLES)
     conn.executescript(
         "DROP VIEW IF EXISTS inspection_effective; DROP VIEW IF EXISTS corrections_active;"
+        "DROP VIEW IF EXISTS rules_effective; DROP VIEW IF EXISTS facts_current;"
     )
+    # facts, user corrections, conversations and messages are memory, not data: they survive a re-ingest
+    conn.execute("DELETE FROM corrections WHERE source='dataset'")
     for t in ("datasets", "teams", "areas", "users", "wells", "inspections", "maintenance",
-              "regulatory_events", "notes", "rules", "report_facts", "corrections", "doc_chunks"):
+              "regulatory_events", "notes", "rules", "report_facts", "doc_chunks"):
         conn.execute(f"DROP TABLE IF EXISTS {t}")
     conn.commit()
     init_schema(conn)
