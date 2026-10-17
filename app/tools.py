@@ -8,7 +8,7 @@ import re
 import sqlite3
 from datetime import date
 
-from . import compliance, config, memory, metrics
+from . import compliance, config, memory, metrics, visuals
 from .docsearch import DocIndex
 
 SHUTDOWN_RE = re.compile(r"shut[\s-]?in|shut\s?down|workover|offline|out of service|restart|rig", re.I)
@@ -387,6 +387,11 @@ TOOLS: dict[str, dict] = {
                   "parameters": _obj({"well_type": {"type": "string"}}, [])},
     "sql_query": {"fn": sql_query, "description": "Read-only SELECT escape hatch for ad hoc analysis. Prefer the other tools.",
                   "parameters": _obj({"query": {"type": "string"}}, ["query"])},
+    "render_visual": {"fn": visuals.render_visual, "parameters": visuals.PARAMS,
+                      "description": "Draw an inline visual in the chat from data you already got from tools. If the user "
+                      "names a visual, use it. Otherwise: list of records -> table; change over time -> line_chart; "
+                      "compare a few wells/areas -> bar_chart; locations -> map; two dimensions (area x month) -> heatmap; "
+                      "one well's current state -> status_card; a single fact -> no visual, just text."},
     "explain_spill": {"fn": explain_spill, "description": "Everything on record about one detected spill (AI detection, notes by "
                       "different people, formal corrections, follow-up repair) to answer 'was it a real spill?'. A note is "
                       "not a correction.", "parameters": _obj({"well_id": {"type": "string"}, "date_": {"type": "string",
@@ -449,6 +454,6 @@ def call_tool(conn, name: str, args: dict | None, user_id: str | None = None, co
         res = t["fn"](conn, **args)
     except (ValueError, sqlite3.Error) as e:
         return {"error": str(e)}
-    if conv_id and user_id and (name == "recall" or not t.get("needs_user")):
+    if conv_id and user_id and name != "render_visual" and (name == "recall" or not t.get("needs_user")):
         memory.log_tool_call(conn, conv_id, user_id, name, {k: v for k, v in args.items() if k != "user_id"}, res)
     return res

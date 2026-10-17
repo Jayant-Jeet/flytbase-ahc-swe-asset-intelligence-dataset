@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Asset Intelligence Copilot</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header>
+  <h1>Asset Intelligence Copilot</h1>
+  <div class="controls">
+    <label>User <select id="user"></select></label>
+    <span id="today" class="pill"></span>
+    <button id="newchat" title="Start a new conversation">New chat</button>
+    <button id="nextday" title="Demo: simulate tomorrow (for 'yesterday' recall)">Next day</button>
+    <button id="reset" title="Clear all memory (facts, corrections, conversations)">Reset memory</button>
+  </div>
+</header>
+<main id="chat"></main>
+<form id="form">
+  <input id="input" autocomplete="off" placeholder="Ask about a well, area or well type…" autofocus>
+  <button type="submit" id="send">Send</button>
+</form>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
