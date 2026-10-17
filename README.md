@@ -1,4 +1,4 @@
-# Asset Intelligence Copilot
+# Swayam- The Asset Intelligence Copilot
 
 Challenge repository for the FlytBase Hack Day (Hacktoberfest 2026).
 
