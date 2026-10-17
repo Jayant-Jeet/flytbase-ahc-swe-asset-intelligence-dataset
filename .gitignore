@@ -4,3 +4,9 @@ prototype/
 # OS files
 .DS_Store
 Thumbs.db
+
+.env
+data/*.db
+__pycache__/
+.pytest_cache/
+node_modules/
