@@ -168,6 +168,8 @@ class OpenAICompatProvider(LLMProvider):
 
     def stream_chat(self, system, messages, tools):
         body = {"model": self.model, "temperature": 0, "stream": True, "messages": self._messages(system, messages)}
+        if self.name == "ollama" and os.getenv("OLLAMA_THINK", "0") != "1":
+            body["reasoning_effort"] = "none"
         if tools:
             body["tools"] = [{"type": "function", "function": t} for t in tools]
         pending: dict[int, dict] = {}

@@ -28,6 +28,17 @@ Design: the LLM only picks tools and writes language; every number, date and sta
 | `LLM_MODEL` | default `gemma-4-31b-it` (OpenRouter: `google/gemma-4-31b-it:free`) |
 | `GOOGLE_API_KEY`, `OPENROUTER_API_KEY`, `OLLAMA_BASE_URL` | credentials / endpoints |
 
+### Using Ollama (local Gemma 4 31B)
+
+```powershell
+ollama pull gemma4:31b
+ollama create gemma4-31b-ctx -f ollama\Modelfile   # same model with a 16k context window
+```
+
+Set `LLM_PROVIDER=ollama` and `LLM_MODEL=gemma4-31b-ctx` in `.env`. The default Ollama context is too small for the
+system prompt plus tool specs, so tool calling degrades without the larger-context variant. Thinking is disabled by
+default for speed (`OLLAMA_THINK=1` re-enables it). Expect tens of seconds per model call on consumer hardware.
+
 ### Ingest a new dataset (no code changes)
 
 ```powershell
