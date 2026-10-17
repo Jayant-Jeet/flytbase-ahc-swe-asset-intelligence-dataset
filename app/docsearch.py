@@ -17,7 +17,14 @@ def tokenize(text: str) -> list[str]:
         toks.append(t)
         if "-" in t:  # ids like mnt-0001-029 also match by parts
             toks.extend(t.split("-"))
-    return [t[:-1] if len(t) > 3 and t.endswith("s") else t for t in toks]
+    return [_stem(t) for t in toks]
+
+
+def _stem(t: str) -> str:
+    for suf in ("ments", "ment", "ings", "ing", "ed", "es", "s"):
+        if t.endswith(suf) and len(t) - len(suf) >= 4:
+            return t[: -len(suf)]
+    return t
 
 
 def slug(s: str) -> str:

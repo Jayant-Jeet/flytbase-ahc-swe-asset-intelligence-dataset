@@ -30,6 +30,36 @@ def year_range(year: int, today: date | None = None) -> tuple[str, str]:
     return date(year, 1, 1).isoformat(), end.isoformat()
 
 
+def parse_period(text: str, today: date | None = None) -> tuple[str, str]:
+    """Turn 'last_4_months', 'last 90 days', 'last 13 weeks', '2025', 'year_to_date', 'last year' into dates."""
+    t = today or config.today()
+    s = (text or "").lower().replace("_", " ").strip()
+    if m := re.fullmatch(r"(?:in\s+)?((?:19|20)\d\d)", s):
+        return year_range(int(m.group(1)), t)
+    if s in ("year to date", "ytd", "this year", "current year"):
+        return year_range(t.year, t)
+    if s in ("last year", "previous year"):
+        return year_range(t.year - 1, t)
+    if m := re.search(r"(?:last|past|previous)\s+(\d+)\s+(day|week|month|year)s?", s):
+        n, unit = int(m.group(1)), m.group(2)
+        if unit == "day":
+            return last_n_days(n, t)
+        if unit == "week":
+            return last_n_days(7 * n, t)
+        return last_n_months(n * (12 if unit == "year" else 1), t)
+    if s in ("today", "now", "current"):
+        return t.isoformat(), t.isoformat()
+    raise ValueError(f"cannot parse period {text!r}; pass start and end as YYYY-MM-DD")
+
+
+def resolve_range(period: str | None, start: str | None, end: str | None) -> tuple[str, str]:
+    if start and end:
+        return start, end
+    if period:
+        return parse_period(period)
+    raise ValueError("give either period (e.g. 'last_4_months', '2025') or start and end")
+
+
 def resolve_scope(conn, scope: str) -> dict:
     """Scope is a well id, area id/name, or well type. Returns {kind, id, wells:[...]}."""
     s = (scope or "").strip()
