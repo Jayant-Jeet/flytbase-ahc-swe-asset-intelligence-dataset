@@ -1,0 +1,2 @@
+{"asset_id": "WELL-0419", "created_at": "2024-03-21T18:00:00Z", "author_user_id": "U-601", "note_type": "operator_note", "text": "Waiting on replacement parts from the vendor; well stays shut in until they arrive.", "valid_from": "2024-03-21", "valid_to": "2024-04-04", "note_id": "CTX-0419-001"}
+{"asset_id": "WELL-0419", "created_at": "2026-12-30T19:00:00Z", "author_user_id": "U-602", "note_type": "operator_note", "text": "Pumper reports rattling at WELL-0419 pump jack, keep an eye on it.", "valid_from": "2026-12-30", "valid_to": null, "note_id": "CTX-0419-002"}

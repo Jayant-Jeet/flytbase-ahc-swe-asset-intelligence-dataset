@@ -1,0 +1,2 @@
+{"asset_id": "WELL-0586", "created_at": "2026-10-30T06:30:00Z", "author_user_id": "U-503", "note_type": "operator_note", "text": "Shut-in WELL-0586 so the maintenance crew can start work.", "valid_from": "2026-10-30", "valid_to": null, "note_id": "CTX-0586-001"}
+{"asset_id": "WELL-0586", "created_at": "2026-10-30T20:00:00Z", "author_user_id": "U-505", "note_type": "operator_note", "text": "Restarted WELL-0586 after the crew cleared the lockout.", "valid_from": "2026-10-30", "valid_to": null, "note_id": "CTX-0586-002"}

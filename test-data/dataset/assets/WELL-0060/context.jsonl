@@ -1,0 +1,3 @@
+{"asset_id": "WELL-0060", "created_at": "2026-11-23T06:45:00Z", "author_user_id": "U-102", "note_type": "operator_note", "text": "WELL-0060 tank gauged, level normal.", "valid_from": "2026-11-23", "valid_to": null, "note_id": "CTX-0060-001"}
+{"asset_id": "WELL-0060", "created_at": "2026-12-25T07:30:00Z", "author_user_id": "U-104", "note_type": "operator_note", "text": "Shut in WELL-0060 at the wellhead for the repair crew.", "valid_from": "2026-12-25", "valid_to": null, "note_id": "CTX-0060-002"}
+{"asset_id": "WELL-0060", "created_at": "2027-01-06T16:30:00Z", "author_user_id": "U-104", "note_type": "operator_note", "text": "Restarted WELL-0060 after the crew cleared the lockout.", "valid_from": "2027-01-06", "valid_to": null, "note_id": "CTX-0060-003"}

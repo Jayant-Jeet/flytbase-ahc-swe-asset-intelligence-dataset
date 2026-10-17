@@ -1,0 +1,2 @@
+{"asset_id": "WELL-0390", "created_at": "2026-11-20T07:00:00Z", "author_user_id": "U-606", "note_type": "operator_note", "text": "Shut in WELL-0390 at the wellhead for the repair crew.", "valid_from": "2026-11-20", "valid_to": null, "note_id": "CTX-0390-001"}
+{"asset_id": "WELL-0390", "created_at": "2026-11-21T03:00:00Z", "author_user_id": "U-604", "note_type": "operator_note", "text": "Restarted WELL-0390, unit running smooth.", "valid_from": "2026-11-21", "valid_to": null, "note_id": "CTX-0390-002"}

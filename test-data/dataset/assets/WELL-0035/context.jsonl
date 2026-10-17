@@ -1,0 +1,2 @@
+{"asset_id": "WELL-0035", "created_at": "2024-03-07T18:00:00Z", "author_user_id": "U-101", "note_type": "operator_note", "text": "Shut in by the operator during a nearby pipeline tie-in; not an equipment failure.", "valid_from": "2024-03-07", "valid_to": "2024-04-11", "note_id": "CTX-0035-001"}
+{"asset_id": "WELL-0035", "created_at": "2026-12-18T17:35:00Z", "author_user_id": "U-104", "note_type": "operator_note", "text": "WELL-0035 pumping normally.", "valid_from": "2026-12-18", "valid_to": null, "note_id": "CTX-0035-002"}

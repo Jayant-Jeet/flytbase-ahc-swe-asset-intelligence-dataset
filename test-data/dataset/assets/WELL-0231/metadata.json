@@ -1,0 +1,47 @@
+{
+  "asset_id": "WELL-0231",
+  "name": "SE-31 Well 231",
+  "asset_category": "oil_well",
+  "well_type": "T200",
+  "area_id": "SE-31",
+  "team_id": "TEAM-SE",
+  "in_charge_user_id": "U-501",
+  "location": {
+    "lat": 31.72616,
+    "lon": -102.32095
+  },
+  "installed_on": "2024-08-15",
+  "equipment": [
+    {
+      "equipment_id": "WELL-0231-WH",
+      "kind": "wellhead",
+      "model": "WH-3000"
+    },
+    {
+      "equipment_id": "WELL-0231-PJ",
+      "kind": "pump_jack",
+      "model": "PJ-228"
+    },
+    {
+      "equipment_id": "WELL-0231-RS",
+      "kind": "rod_string",
+      "model": "API Grade D 7/8 in"
+    },
+    {
+      "equipment_id": "WELL-0231-DP",
+      "kind": "downhole_pump",
+      "model": "Insert rod pump 1.75 in"
+    },
+    {
+      "equipment_id": "WELL-0231-FL",
+      "kind": "flowline",
+      "model": "3 in carbon steel"
+    }
+  ],
+  "last_inspection": {
+    "inspection_id": "INS-0231-0124",
+    "inspected_at": "2027-01-14T07:45:00Z",
+    "inspector_user_id": "U-503"
+  },
+  "recorded_status": "active"
+}

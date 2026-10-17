@@ -1,0 +1,2 @@
+{"asset_id": "WELL-0254", "created_at": "2026-12-28T20:10:00Z", "author_user_id": "U-204", "note_type": "operator_note", "text": "WELL-0254 tank gauged, level normal.", "valid_from": "2026-12-28", "valid_to": null, "note_id": "CTX-0254-001"}
+{"asset_id": "WELL-0254", "created_at": "2026-12-30T20:05:00Z", "author_user_id": "U-203", "note_type": "operator_note", "text": "Checked WELL-0254 after the rain, pad dry and clean.", "valid_from": "2026-12-30", "valid_to": null, "note_id": "CTX-0254-002"}

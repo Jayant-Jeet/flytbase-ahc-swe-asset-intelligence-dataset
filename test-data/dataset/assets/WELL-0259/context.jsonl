@@ -1,0 +1,2 @@
+{"asset_id": "WELL-0259", "created_at": "2026-02-05T17:10:00Z", "author_user_id": "U-402", "note_type": "correction", "inspection_id": "INS-0259-0170", "text": "Inspection INS-0259-0170: wet soil after rain. Not a crude spill.", "valid_from": "2026-02-05", "valid_to": null, "note_id": "CTX-0259-001"}
+{"asset_id": "WELL-0259", "created_at": "2027-01-08T21:45:00Z", "author_user_id": "U-102", "note_type": "operator_note", "text": "WELL-0259 pumping normally.", "valid_from": "2027-01-08", "valid_to": null, "note_id": "CTX-0259-002"}

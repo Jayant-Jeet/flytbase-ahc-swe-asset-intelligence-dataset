@@ -1,0 +1,47 @@
+{
+  "asset_id": "WELL-0343",
+  "name": "NW-12 Well 343",
+  "asset_category": "oil_well",
+  "well_type": "T200",
+  "area_id": "NW-12",
+  "team_id": "TEAM-NW",
+  "in_charge_user_id": "U-601",
+  "location": {
+    "lat": 32.1943,
+    "lon": -102.6032
+  },
+  "installed_on": "2012-09-17",
+  "equipment": [
+    {
+      "equipment_id": "WELL-0343-WH",
+      "kind": "wellhead",
+      "model": "WH-3000"
+    },
+    {
+      "equipment_id": "WELL-0343-PJ",
+      "kind": "pump_jack",
+      "model": "PJ-228"
+    },
+    {
+      "equipment_id": "WELL-0343-RS",
+      "kind": "rod_string",
+      "model": "API Grade D 7/8 in"
+    },
+    {
+      "equipment_id": "WELL-0343-DP",
+      "kind": "downhole_pump",
+      "model": "Insert rod pump 1.75 in"
+    },
+    {
+      "equipment_id": "WELL-0343-FL",
+      "kind": "flowline",
+      "model": "3 in carbon steel"
+    }
+  ],
+  "last_inspection": {
+    "inspection_id": "INS-0343-0217",
+    "inspected_at": "2027-01-14T15:30:00Z",
+    "inspector_user_id": "U-604"
+  },
+  "recorded_status": "active"
+}

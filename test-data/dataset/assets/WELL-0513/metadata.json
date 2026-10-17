@@ -1,0 +1,47 @@
+{
+  "asset_id": "WELL-0513",
+  "name": "SE-32 Well 513",
+  "asset_category": "oil_well",
+  "well_type": "T350",
+  "area_id": "SE-32",
+  "team_id": "TEAM-SE",
+  "in_charge_user_id": "U-501",
+  "location": {
+    "lat": 31.68028,
+    "lon": -102.24976
+  },
+  "installed_on": "2018-10-27",
+  "equipment": [
+    {
+      "equipment_id": "WELL-0513-WH",
+      "kind": "wellhead",
+      "model": "WH-5000"
+    },
+    {
+      "equipment_id": "WELL-0513-PJ",
+      "kind": "pump_jack",
+      "model": "PJ-456"
+    },
+    {
+      "equipment_id": "WELL-0513-RS",
+      "kind": "rod_string",
+      "model": "API Grade D 7/8 in"
+    },
+    {
+      "equipment_id": "WELL-0513-DP",
+      "kind": "downhole_pump",
+      "model": "Insert rod pump 1.75 in"
+    },
+    {
+      "equipment_id": "WELL-0513-FL",
+      "kind": "flowline",
+      "model": "3 in carbon steel"
+    }
+  ],
+  "last_inspection": {
+    "inspection_id": "INS-0513-0218",
+    "inspected_at": "2027-01-14T13:30:00Z",
+    "inspector_user_id": "U-504"
+  },
+  "recorded_status": "down"
+}

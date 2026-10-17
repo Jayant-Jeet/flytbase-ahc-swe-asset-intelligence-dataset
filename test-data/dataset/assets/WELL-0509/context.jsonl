@@ -1,0 +1,2 @@
+{"asset_id": "WELL-0509", "created_at": "2022-12-22T17:10:00Z", "author_user_id": "U-401", "note_type": "correction", "inspection_id": "INS-0509-0009", "text": "Inspection INS-0509-0009: wet soil after rain. Not a crude spill.", "valid_from": "2022-12-22", "valid_to": null, "note_id": "CTX-0509-001"}
+{"asset_id": "WELL-0509", "created_at": "2026-09-03T18:00:00Z", "author_user_id": "U-501", "note_type": "operator_note", "text": "Workover rig delayed by weather; restart pushed back about a week.", "valid_from": "2026-09-03", "valid_to": "2026-09-17", "note_id": "CTX-0509-002"}

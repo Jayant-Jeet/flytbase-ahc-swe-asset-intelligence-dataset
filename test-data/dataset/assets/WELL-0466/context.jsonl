@@ -1,0 +1,2 @@
+{"asset_id": "WELL-0466", "created_at": "2026-05-14T18:00:00Z", "author_user_id": "U-501", "note_type": "operator_note", "text": "Waiting on replacement parts from the vendor; well stays shut in until they arrive.", "valid_from": "2026-05-14", "valid_to": "2026-06-18", "note_id": "CTX-0466-001"}
+{"asset_id": "WELL-0466", "created_at": "2026-10-24T10:30:00Z", "author_user_id": "U-503", "note_type": "operator_note", "text": "WELL-0466 pumping normally.", "valid_from": "2026-10-24", "valid_to": null, "note_id": "CTX-0466-002"}

@@ -1,0 +1,2 @@
+{"asset_id": "WELL-0215", "created_at": "2023-11-09T18:00:00Z", "author_user_id": "U-501", "note_type": "operator_note", "text": "Workover rig delayed by weather; restart pushed back about a week.", "valid_from": "2023-11-09", "valid_to": "2023-11-23", "note_id": "CTX-0215-001"}
+{"asset_id": "WELL-0215", "created_at": "2026-11-10T16:15:00Z", "author_user_id": "U-504", "note_type": "operator_note", "text": "WELL-0215 pumping normally.", "valid_from": "2026-11-10", "valid_to": null, "note_id": "CTX-0215-002"}

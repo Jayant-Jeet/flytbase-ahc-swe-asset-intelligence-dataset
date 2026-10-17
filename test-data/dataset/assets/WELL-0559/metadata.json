@@ -1,0 +1,42 @@
+{
+  "asset_id": "WELL-0559",
+  "name": "SE-32 Well 559",
+  "asset_category": "oil_well",
+  "well_type": "T500",
+  "area_id": "SE-32",
+  "team_id": "TEAM-SE",
+  "in_charge_user_id": "U-501",
+  "location": {
+    "lat": 31.69121,
+    "lon": -102.27903
+  },
+  "installed_on": "2017-06-06",
+  "equipment": [
+    {
+      "equipment_id": "WELL-0559-WH",
+      "kind": "wellhead",
+      "model": "WH-5000"
+    },
+    {
+      "equipment_id": "WELL-0559-ESP",
+      "kind": "esp_pump",
+      "model": "ESP-400"
+    },
+    {
+      "equipment_id": "WELL-0559-FL",
+      "kind": "flowline",
+      "model": "3 in carbon steel"
+    },
+    {
+      "equipment_id": "WELL-0559-SP",
+      "kind": "separator",
+      "model": "2-phase vertical 24 in"
+    }
+  ],
+  "last_inspection": {
+    "inspection_id": "INS-0559-0216",
+    "inspected_at": "2027-01-14T13:00:00Z",
+    "inspector_user_id": "U-503"
+  },
+  "recorded_status": "active"
+}

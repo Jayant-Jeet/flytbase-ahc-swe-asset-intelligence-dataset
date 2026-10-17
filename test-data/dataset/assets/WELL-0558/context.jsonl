@@ -1,0 +1,2 @@
+{"asset_id": "WELL-0558", "created_at": "2026-06-18T17:10:00Z", "author_user_id": "U-401", "note_type": "correction", "inspection_id": "INS-0558-0190", "text": "Inspection INS-0558-0190: shadow from the drive panel. Not a crude spill.", "valid_from": "2026-06-18", "valid_to": null, "note_id": "CTX-0558-001"}
+{"asset_id": "WELL-0558", "created_at": "2026-11-19T22:45:00Z", "author_user_id": "U-503", "note_type": "operator_note", "text": "WELL-0558 running steady.", "valid_from": "2026-11-19", "valid_to": null, "note_id": "CTX-0558-002"}

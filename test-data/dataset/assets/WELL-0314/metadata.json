@@ -1,0 +1,42 @@
+{
+  "asset_id": "WELL-0314",
+  "name": "NW-12 Well 314",
+  "asset_category": "oil_well",
+  "well_type": "T500",
+  "area_id": "NW-12",
+  "team_id": "TEAM-NW",
+  "in_charge_user_id": "U-601",
+  "location": {
+    "lat": 32.21255,
+    "lon": -102.59475
+  },
+  "installed_on": "2016-11-16",
+  "equipment": [
+    {
+      "equipment_id": "WELL-0314-WH",
+      "kind": "wellhead",
+      "model": "WH-5000"
+    },
+    {
+      "equipment_id": "WELL-0314-ESP",
+      "kind": "esp_pump",
+      "model": "ESP-400"
+    },
+    {
+      "equipment_id": "WELL-0314-FL",
+      "kind": "flowline",
+      "model": "3 in carbon steel"
+    },
+    {
+      "equipment_id": "WELL-0314-SP",
+      "kind": "separator",
+      "model": "2-phase vertical 24 in"
+    }
+  ],
+  "last_inspection": {
+    "inspection_id": "INS-0314-0218",
+    "inspected_at": "2027-01-14T07:45:00Z",
+    "inspector_user_id": "U-603"
+  },
+  "recorded_status": "active"
+}

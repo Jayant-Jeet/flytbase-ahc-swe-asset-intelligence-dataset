@@ -1,0 +1,37 @@
+{
+  "asset_id": "WELL-0488",
+  "name": "SE-32 Well 488",
+  "asset_category": "oil_well",
+  "well_type": "T500",
+  "area_id": "SE-32",
+  "team_id": "TEAM-SE",
+  "in_charge_user_id": "U-501",
+  "location": {
+    "lat": 31.65456,
+    "lon": -102.25526
+  },
+  "installed_on": "2017-07-10",
+  "equipment": [
+    {
+      "equipment_id": "WELL-0488-WH",
+      "kind": "wellhead",
+      "model": "WH-5000"
+    },
+    {
+      "equipment_id": "WELL-0488-ESP",
+      "kind": "esp_pump",
+      "model": "ESP-400"
+    },
+    {
+      "equipment_id": "WELL-0488-FL",
+      "kind": "flowline",
+      "model": "3 in carbon steel"
+    }
+  ],
+  "last_inspection": {
+    "inspection_id": "INS-0488-0219",
+    "inspected_at": "2027-01-14T08:45:00Z",
+    "inspector_user_id": "U-502"
+  },
+  "recorded_status": "active"
+}

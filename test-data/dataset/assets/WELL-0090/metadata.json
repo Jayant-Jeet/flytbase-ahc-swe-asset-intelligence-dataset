@@ -1,0 +1,52 @@
+{
+  "asset_id": "WELL-0090",
+  "name": "SW-24 Well 090",
+  "asset_category": "oil_well",
+  "well_type": "T350",
+  "area_id": "SW-24",
+  "team_id": "TEAM-SW",
+  "in_charge_user_id": "U-101",
+  "location": {
+    "lat": 31.80138,
+    "lon": -102.46385
+  },
+  "installed_on": "2013-11-09",
+  "equipment": [
+    {
+      "equipment_id": "WELL-0090-WH",
+      "kind": "wellhead",
+      "model": "WH-5000"
+    },
+    {
+      "equipment_id": "WELL-0090-PJ",
+      "kind": "pump_jack",
+      "model": "PJ-456"
+    },
+    {
+      "equipment_id": "WELL-0090-RS",
+      "kind": "rod_string",
+      "model": "API Grade D 7/8 in"
+    },
+    {
+      "equipment_id": "WELL-0090-DP",
+      "kind": "downhole_pump",
+      "model": "Insert rod pump 1.75 in"
+    },
+    {
+      "equipment_id": "WELL-0090-FL",
+      "kind": "flowline",
+      "model": "3 in carbon steel"
+    },
+    {
+      "equipment_id": "WELL-0090-SP",
+      "kind": "separator",
+      "model": "2-phase vertical 24 in"
+    }
+  ],
+  "last_inspection": {
+    "inspection_id": "INS-0090-0218",
+    "inspected_at": "2027-01-14T07:00:00Z",
+    "inspector_user_id": "U-102"
+  },
+  "recorded_status": "active"
+}

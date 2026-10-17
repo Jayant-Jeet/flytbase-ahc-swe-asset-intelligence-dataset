@@ -1,0 +1,2 @@
+{"asset_id": "WELL-0280", "created_at": "2026-10-30T11:15:00Z", "author_user_id": "U-102", "note_type": "operator_note", "text": "WELL-0280 tank gauged, level normal.", "valid_from": "2026-10-30", "valid_to": null, "note_id": "CTX-0280-001"}
+{"asset_id": "WELL-0280", "created_at": "2026-12-25T09:35:00Z", "author_user_id": "U-104", "note_type": "operator_note", "text": "WELL-0280 pumping normally.", "valid_from": "2026-12-25", "valid_to": null, "note_id": "CTX-0280-002"}

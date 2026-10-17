@@ -1,0 +1,42 @@
+{
+  "asset_id": "WELL-0208",
+  "name": "SE-31 Well 208",
+  "asset_category": "oil_well",
+  "well_type": "T500",
+  "area_id": "SE-31",
+  "team_id": "TEAM-SE",
+  "in_charge_user_id": "U-501",
+  "location": {
+    "lat": 31.69696,
+    "lon": -102.32473
+  },
+  "installed_on": "2026-10-24",
+  "equipment": [
+    {
+      "equipment_id": "WELL-0208-WH",
+      "kind": "wellhead",
+      "model": "WH-5000"
+    },
+    {
+      "equipment_id": "WELL-0208-ESP",
+      "kind": "esp_pump",
+      "model": "ESP-400"
+    },
+    {
+      "equipment_id": "WELL-0208-FL",
+      "kind": "flowline",
+      "model": "3 in carbon steel"
+    },
+    {
+      "equipment_id": "WELL-0208-SP",
+      "kind": "separator",
+      "model": "2-phase vertical 24 in"
+    }
+  ],
+  "last_inspection": {
+    "inspection_id": "INS-0208-0010",
+    "inspected_at": "2027-01-14T15:00:00Z",
+    "inspector_user_id": "U-503"
+  },
+  "recorded_status": "active"
+}

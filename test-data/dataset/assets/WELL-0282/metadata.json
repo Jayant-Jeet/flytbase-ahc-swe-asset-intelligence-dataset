@@ -1,0 +1,42 @@
+{
+  "asset_id": "WELL-0282",
+  "name": "NE-08 Well 282",
+  "asset_category": "oil_well",
+  "well_type": "T500",
+  "area_id": "NE-08",
+  "team_id": "TEAM-NE",
+  "in_charge_user_id": "U-201",
+  "location": {
+    "lat": 32.17354,
+    "lon": -102.14465
+  },
+  "installed_on": "2013-09-12",
+  "equipment": [
+    {
+      "equipment_id": "WELL-0282-WH",
+      "kind": "wellhead",
+      "model": "WH-5000"
+    },
+    {
+      "equipment_id": "WELL-0282-ESP",
+      "kind": "esp_pump",
+      "model": "ESP-400"
+    },
+    {
+      "equipment_id": "WELL-0282-FL",
+      "kind": "flowline",
+      "model": "3 in carbon steel"
+    },
+    {
+      "equipment_id": "WELL-0282-SP",
+      "kind": "separator",
+      "model": "2-phase vertical 24 in"
+    }
+  ],
+  "last_inspection": {
+    "inspection_id": "INS-0282-0218",
+    "inspected_at": "2027-01-14T14:30:00Z",
+    "inspector_user_id": "U-203"
+  },
+  "recorded_status": "active"
+}

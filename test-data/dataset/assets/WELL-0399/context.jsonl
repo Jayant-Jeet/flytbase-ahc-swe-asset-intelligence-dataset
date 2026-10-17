@@ -1,0 +1,2 @@
+{"asset_id": "WELL-0399", "created_at": "2025-10-16T18:00:00Z", "author_user_id": "U-601", "note_type": "operator_note", "text": "Waiting on replacement parts from the vendor; well stays shut in until they arrive.", "valid_from": "2025-10-16", "valid_to": "2025-10-30", "note_id": "CTX-0399-001"}
+{"asset_id": "WELL-0399", "created_at": "2026-12-09T06:00:00Z", "author_user_id": "U-605", "note_type": "operator_note", "text": "WELL-0399 tank gauged, level normal.", "valid_from": "2026-12-09", "valid_to": null, "note_id": "CTX-0399-002"}

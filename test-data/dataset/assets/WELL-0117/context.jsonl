@@ -1,0 +1,2 @@
+{"asset_id": "WELL-0117", "created_at": "2026-11-13T07:15:00Z", "author_user_id": "U-204", "note_type": "operator_note", "text": "Shut in WELL-0117 at the wellhead for the repair crew.", "valid_from": "2026-11-13", "valid_to": null, "note_id": "CTX-0117-001"}
+{"asset_id": "WELL-0117", "created_at": "2026-11-14T12:30:00Z", "author_user_id": "U-202", "note_type": "operator_note", "text": "WELL-0117 put back on production after the repair crew finished.", "valid_from": "2026-11-14", "valid_to": null, "note_id": "CTX-0117-002"}

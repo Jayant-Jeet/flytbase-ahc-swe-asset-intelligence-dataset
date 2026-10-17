@@ -1,0 +1,37 @@
+{
+  "asset_id": "WELL-0344",
+  "name": "NW-12 Well 344",
+  "asset_category": "oil_well",
+  "well_type": "T500",
+  "area_id": "NW-12",
+  "team_id": "TEAM-NW",
+  "in_charge_user_id": "U-601",
+  "location": {
+    "lat": 32.22525,
+    "lon": -102.62963
+  },
+  "installed_on": "2015-01-04",
+  "equipment": [
+    {
+      "equipment_id": "WELL-0344-WH",
+      "kind": "wellhead",
+      "model": "WH-5000"
+    },
+    {
+      "equipment_id": "WELL-0344-ESP",
+      "kind": "esp_pump",
+      "model": "ESP-400"
+    },
+    {
+      "equipment_id": "WELL-0344-FL",
+      "kind": "flowline",
+      "model": "3 in carbon steel"
+    }
+  ],
+  "last_inspection": {
+    "inspection_id": "INS-0344-0219",
+    "inspected_at": "2027-01-14T14:15:00Z",
+    "inspector_user_id": "U-602"
+  },
+  "recorded_status": "active"
+}

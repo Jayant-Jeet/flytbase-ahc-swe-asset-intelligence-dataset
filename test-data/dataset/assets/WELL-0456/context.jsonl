@@ -1,0 +1,2 @@
+{"asset_id": "WELL-0456", "created_at": "2025-02-13T17:10:00Z", "author_user_id": "U-402", "note_type": "correction", "inspection_id": "INS-0456-0117", "text": "Inspection INS-0456-0117: wet soil after rain. Not a crude spill.", "valid_from": "2025-02-13", "valid_to": null, "note_id": "CTX-0456-001"}
+{"asset_id": "WELL-0456", "created_at": "2027-01-14T21:35:00Z", "author_user_id": "U-506", "note_type": "operator_note", "text": "Rod squeal at WELL-0456 stuffing box, greased the polished rod.", "valid_from": "2027-01-14", "valid_to": null, "note_id": "CTX-0456-002"}

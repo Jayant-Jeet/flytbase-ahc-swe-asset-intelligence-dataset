@@ -67,6 +67,10 @@ Each run uses a throwaway DB and resets memory. Q11-Q18 are multi-turn / multi-u
 
 All data is synthetic and created for this challenge. Manuals and procedures are simplified, fictional documents, not real operating or legal guidance.
 
+## Test data
+
+`test-data/` holds the test dataset (`test-data/dataset/`), its release notes (`test-data/README.md`) and the final questions (`test-data/final-questions.md`).
+
 ## License
 
 [MIT](LICENSE)

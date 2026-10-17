@@ -1,0 +1,2 @@
+{"asset_id": "WELL-0092", "created_at": "2026-04-02T18:00:00Z", "author_user_id": "U-201", "note_type": "operator_note", "text": "Shut in by the operator during a nearby pipeline tie-in; not an equipment failure.", "valid_from": "2026-04-02", "valid_to": "2026-04-23", "note_id": "CTX-0092-001"}
+{"asset_id": "WELL-0092", "created_at": "2026-12-11T12:25:00Z", "author_user_id": "U-102", "note_type": "operator_note", "text": "Rod squeal at WELL-0092 stuffing box, greased the polished rod.", "valid_from": "2026-12-11", "valid_to": null, "note_id": "CTX-0092-002"}

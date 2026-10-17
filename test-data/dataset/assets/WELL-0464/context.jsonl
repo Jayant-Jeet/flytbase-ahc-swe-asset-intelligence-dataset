@@ -1,0 +1,2 @@
+{"asset_id": "WELL-0464", "created_at": "2026-09-17T18:00:00Z", "author_user_id": "U-501", "note_type": "operator_note", "text": "Shut in by the operator during a nearby pipeline tie-in; not an equipment failure.", "valid_from": "2026-09-17", "valid_to": "2026-10-01", "note_id": "CTX-0464-001"}
+{"asset_id": "WELL-0464", "created_at": "2026-10-30T08:05:00Z", "author_user_id": "U-503", "note_type": "operator_note", "text": "WELL-0464 drive panel readings normal.", "valid_from": "2026-10-30", "valid_to": null, "note_id": "CTX-0464-002"}

@@ -1,0 +1,3 @@
+{"asset_id": "WELL-0428", "created_at": "2026-12-20T22:30:00Z", "author_user_id": "U-605", "note_type": "operator_note", "text": "Walked the flowline at WELL-0428, nothing to report.", "valid_from": "2026-12-20", "valid_to": null, "note_id": "CTX-0428-001"}
+{"asset_id": "WELL-0428", "created_at": "2027-01-01T16:55:00Z", "author_user_id": "U-604", "note_type": "operator_note", "text": "Heard fluid pound on WELL-0428, unit still running.", "valid_from": "2027-01-01", "valid_to": null, "note_id": "CTX-0428-002"}
+{"asset_id": "WELL-0428", "created_at": "2027-01-06T11:10:00Z", "author_user_id": "U-605", "note_type": "operator_note", "text": "Heard fluid pound on WELL-0428, unit still running.", "valid_from": "2027-01-06", "valid_to": null, "note_id": "CTX-0428-003"}

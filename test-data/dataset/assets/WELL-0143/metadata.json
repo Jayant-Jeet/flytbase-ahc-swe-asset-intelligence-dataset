@@ -1,0 +1,52 @@
+{
+  "asset_id": "WELL-0143",
+  "name": "NE-07 Well 143",
+  "asset_category": "oil_well",
+  "well_type": "T200",
+  "area_id": "NE-07",
+  "team_id": "TEAM-NE",
+  "in_charge_user_id": "U-201",
+  "location": {
+    "lat": 32.12373,
+    "lon": -102.17659
+  },
+  "installed_on": "2023-04-27",
+  "equipment": [
+    {
+      "equipment_id": "WELL-0143-WH",
+      "kind": "wellhead",
+      "model": "WH-3000"
+    },
+    {
+      "equipment_id": "WELL-0143-PJ",
+      "kind": "pump_jack",
+      "model": "PJ-228"
+    },
+    {
+      "equipment_id": "WELL-0143-RS",
+      "kind": "rod_string",
+      "model": "API Grade D 7/8 in"
+    },
+    {
+      "equipment_id": "WELL-0143-DP",
+      "kind": "downhole_pump",
+      "model": "Insert rod pump 1.75 in"
+    },
+    {
+      "equipment_id": "WELL-0143-FL",
+      "kind": "flowline",
+      "model": "3 in carbon steel"
+    },
+    {
+      "equipment_id": "WELL-0143-SP",
+      "kind": "separator",
+      "model": "2-phase vertical 24 in"
+    }
+  ],
+  "last_inspection": {
+    "inspection_id": "INS-0143-0188",
+    "inspected_at": "2027-01-14T15:45:00Z",
+    "inspector_user_id": "U-203"
+  },
+  "recorded_status": "active"
+}

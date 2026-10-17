@@ -1,0 +1,47 @@
+{
+  "asset_id": "WELL-0280",
+  "name": "SW-24 Well 280",
+  "asset_category": "oil_well",
+  "well_type": "T350",
+  "area_id": "SW-24",
+  "team_id": "TEAM-SW",
+  "in_charge_user_id": "U-101",
+  "location": {
+    "lat": 31.82797,
+    "lon": -102.46324
+  },
+  "installed_on": "2010-12-05",
+  "equipment": [
+    {
+      "equipment_id": "WELL-0280-WH",
+      "kind": "wellhead",
+      "model": "WH-5000"
+    },
+    {
+      "equipment_id": "WELL-0280-PJ",
+      "kind": "pump_jack",
+      "model": "PJ-456"
+    },
+    {
+      "equipment_id": "WELL-0280-RS",
+      "kind": "rod_string",
+      "model": "API Grade D 7/8 in"
+    },
+    {
+      "equipment_id": "WELL-0280-DP",
+      "kind": "downhole_pump",
+      "model": "Insert rod pump 1.75 in"
+    },
+    {
+      "equipment_id": "WELL-0280-FL",
+      "kind": "flowline",
+      "model": "3 in carbon steel"
+    }
+  ],
+  "last_inspection": {
+    "inspection_id": "INS-0280-0219",
+    "inspected_at": "2027-01-14T07:00:00Z",
+    "inspector_user_id": "U-104"
+  },
+  "recorded_status": "active"
+}

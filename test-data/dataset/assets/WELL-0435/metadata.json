@@ -1,0 +1,37 @@
+{
+  "asset_id": "WELL-0435",
+  "name": "NW-12 Well 435",
+  "asset_category": "oil_well",
+  "well_type": "T500",
+  "area_id": "NW-12",
+  "team_id": "TEAM-NW",
+  "in_charge_user_id": "U-601",
+  "location": {
+    "lat": 32.20873,
+    "lon": -102.61577
+  },
+  "installed_on": "2014-05-09",
+  "equipment": [
+    {
+      "equipment_id": "WELL-0435-WH",
+      "kind": "wellhead",
+      "model": "WH-5000"
+    },
+    {
+      "equipment_id": "WELL-0435-ESP",
+      "kind": "esp_pump",
+      "model": "ESP-400"
+    },
+    {
+      "equipment_id": "WELL-0435-FL",
+      "kind": "flowline",
+      "model": "3 in carbon steel"
+    }
+  ],
+  "last_inspection": {
+    "inspection_id": "INS-0435-0216",
+    "inspected_at": "2027-01-14T07:30:00Z",
+    "inspector_user_id": "U-604"
+  },
+  "recorded_status": "active"
+}

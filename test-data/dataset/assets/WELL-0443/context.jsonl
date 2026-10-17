@@ -1,0 +1,2 @@
+{"asset_id": "WELL-0443", "created_at": "2023-05-18T18:00:00Z", "author_user_id": "U-601", "note_type": "operator_note", "text": "Workover rig delayed by weather; restart pushed back about a week.", "valid_from": "2023-05-18", "valid_to": "2023-06-08", "note_id": "CTX-0443-001"}
+{"asset_id": "WELL-0443", "created_at": "2026-12-01T20:40:00Z", "author_user_id": "U-606", "note_type": "operator_note", "text": "Checked WELL-0443 after the rain, pad dry and clean.", "valid_from": "2026-12-01", "valid_to": null, "note_id": "CTX-0443-002"}

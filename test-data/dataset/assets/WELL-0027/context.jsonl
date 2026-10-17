@@ -1,0 +1,2 @@
+{"asset_id": "WELL-0027", "created_at": "2025-06-26T17:10:00Z", "author_user_id": "U-401", "note_type": "correction", "inspection_id": "INS-0027-0139", "text": "Inspection INS-0027-0139: shadow from the pump jack. Not a crude spill.", "valid_from": "2025-06-26", "valid_to": null, "note_id": "CTX-0027-001"}
+{"asset_id": "WELL-0027", "created_at": "2026-10-19T21:55:00Z", "author_user_id": "U-102", "note_type": "operator_note", "text": "WELL-0027 tank gauged, level normal.", "valid_from": "2026-10-19", "valid_to": null, "note_id": "CTX-0027-002"}

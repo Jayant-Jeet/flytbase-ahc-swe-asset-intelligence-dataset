@@ -1,0 +1,59 @@
+{
+  "asset_id": "WELL-0051",
+  "name": "SW-24 Well 051",
+  "asset_category": "oil_well",
+  "well_type": "T200",
+  "area_id": "SW-24",
+  "team_id": "TEAM-SE",
+  "in_charge_user_id": "U-501",
+  "location": {
+    "lat": 31.77745,
+    "lon": -102.47568
+  },
+  "installed_on": "2009-08-07",
+  "equipment": [
+    {
+      "equipment_id": "WELL-0051-WH",
+      "kind": "wellhead",
+      "model": "WH-3000"
+    },
+    {
+      "equipment_id": "WELL-0051-PJ",
+      "kind": "pump_jack",
+      "model": "PJ-228"
+    },
+    {
+      "equipment_id": "WELL-0051-RS",
+      "kind": "rod_string",
+      "model": "API Grade D 7/8 in"
+    },
+    {
+      "equipment_id": "WELL-0051-DP",
+      "kind": "downhole_pump",
+      "model": "Insert rod pump 1.75 in"
+    },
+    {
+      "equipment_id": "WELL-0051-FL",
+      "kind": "flowline",
+      "model": "3 in carbon steel"
+    }
+  ],
+  "last_inspection": {
+    "inspection_id": "INS-0051-0218",
+    "inspected_at": "2027-01-14T07:30:00Z",
+    "inspector_user_id": "U-502"
+  },
+  "recorded_status": "active",
+  "team_history": [
+    {
+      "team_id": "TEAM-SW",
+      "from": "2009-08-07",
+      "to": "2026-11-30"
+    },
+    {
+      "team_id": "TEAM-SE",
+      "from": "2026-12-01",
+      "to": null
+    }
+  ]
+}
