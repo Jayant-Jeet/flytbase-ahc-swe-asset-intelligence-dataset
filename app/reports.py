@@ -28,6 +28,57 @@ def parse_compliance_table(text: str) -> list[dict]:
     return rows
 
 
+def parse_ops_categories(text: str) -> list[tuple[str, list[str]]]:
+    """Read the ordered failure-category/keyword table (OPS-4) from an SOP document."""
+    out = []
+    active = False
+    for line in text.splitlines():
+        cells = [c.strip() for c in line.strip().strip("|").split("|")]
+        if line.lstrip().startswith("|") and len(cells) == 3 and cells[2].lower() == "keywords":
+            active = True
+            continue
+        if active and not line.lstrip().startswith("|"):
+            active = False
+        if active and len(cells) == 3 and cells[0].isdigit():
+            kws = [k.strip().lower() for k in cells[2].split(",") if k.strip()]
+            if kws and "no keyword" not in cells[2].lower():
+                out.append((cells[1], kws))
+            elif "no keyword" in cells[2].lower():
+                out.append((cells[1], []))
+    return out
+
+
+def classify_root_cause(root: str, cats: list[tuple[str, list[str]]]) -> str | None:
+    if not cats:
+        return None
+    low = (root or "").lower()
+    for name, kws in cats:
+        if any(k in low for k in kws):
+            return name
+    return next((n for n, k in cats if not k), "Other")
+
+
+def parse_extra(text: str, root: str, cats) -> dict:
+    sections = dict(split_sections(text))
+    pm = re.search(r"\*\*Parts installed:\*\*\s*(.+?),\s*serial\s+(\S+?),\s*lot\s+(\S+)", text)
+    model = pm.group(1).strip() if pm else None
+    if model:
+        model = re.sub(r"\s+pump$", "", model, flags=re.I)
+    fu = re.search(r"\*\*Follow-up:\*\*\s*(.+)", text)
+    dl = re.search(r"shut in for about\s+([\d.]+)\s+days\s+longer\s+than\s+the\s+repair\s+itself\s+because\s+(.+?)\.?\s*$",
+                   text, re.I | re.M)
+    h2s = re.search(r"WS-03\s*\|[^|]*\|[^|]*highest\s+([\d.]+)\s*ppm", text) or \
+        re.search(r"highest reading\s+([\d.]+)\s*ppm", text)
+    return {
+        "pump_model": model, "pump_serial": pm.group(2) if pm else None, "pump_lot": pm.group(3) if pm else None,
+        "followup": fu.group(1).strip() if fu else None,
+        "delay_days": float(dl.group(1)) if dl else None, "delay_reason": dl.group(2).strip() if dl else None,
+        "soil_sample_sent": int("Soil samples sent to the lab." in text),
+        "h2s_ppm": float(h2s.group(1)) if h2s else None,
+        "failure_category": classify_root_cause(root, cats),
+    }
+
+
 def parse_report(text: str) -> dict:
     sections = dict(split_sections(text))
     rows = parse_compliance_table(sections.get("Compliance check", ""))

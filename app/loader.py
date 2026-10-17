@@ -12,10 +12,11 @@ from pathlib import Path
 
 from . import docsearch
 from .fleetdocs import FleetDoc, read_text
-from .reports import parse_report
+from .reports import parse_extra, parse_ops_categories, parse_report
 
 DATA_TABLES = ["teams", "areas", "users", "wells", "inspections", "maintenance", "regulatory_events",
-               "notes", "report_facts", "doc_chunks", "datasets"]
+               "notes", "report_facts", "doc_chunks", "datasets", "well_extra", "inspection_extra",
+               "maintenance_extra", "well_type_history", "well_team_history", "report_extra"]
 
 # Language cue used to turn a dataset "correction" note into a structured override.
 # A correction note says what the AI detection really was (rainwater, shadow, ...). Free-text
@@ -70,6 +71,9 @@ def load_dataset(conn, data_dir: Path, name: str, warn: list[str]) -> dict:
                      (u["user_id"], u.get("name"), u.get("role"), u.get("team_id"), name))
 
     chunks: list[dict] = []
+    cats: list = []
+    for sp in sorted((fleet / "sops").glob("*.md")) if (fleet / "sops").exists() else []:
+        cats = parse_ops_categories(read_text(sp)) or cats
     assets = data_dir / "assets"
     for adir in sorted(p for p in assets.iterdir() if p.is_dir()) if assets.exists() else []:
         meta = read_json(adir / "metadata.json", None)
@@ -85,6 +89,12 @@ def load_dataset(conn, data_dir: Path, name: str, warn: list[str]) -> dict:
                       meta.get("recorded_status"), li.get("inspection_id"),
                       json.dumps(meta.get("equipment", [])), name))
         stats["wells"] += 1
+        conn.execute("INSERT OR REPLACE INTO well_extra VALUES (?,?,?)",
+                     (wid, meta.get("status"), meta.get("decommissioned_on")))
+        for h in meta.get("type_history") or []:
+            conn.execute("INSERT INTO well_type_history VALUES (?,?,?,?)", (wid, h.get("well_type"), h.get("from"), h.get("to")))
+        for h in meta.get("team_history") or []:
+            conn.execute("INSERT INTO well_team_history VALUES (?,?,?,?)", (wid, h.get("team_id"), h.get("from"), h.get("to")))
 
         ins = read_jsonl(adir / "inspections.jsonl", warn)
         conn.executemany(
@@ -94,6 +104,8 @@ def load_dataset(conn, data_dir: Path, name: str, warn: list[str]) -> dict:
               _b(i.get("spill_detected")), i.get("spill_area_pct"), i.get("spill_est_volume_bbl"),
               json.dumps(i.get("evidence_images", [])), i.get("notes"), name) for i in ins])
         stats["inspections"] += len(ins)
+        conn.executemany("INSERT OR REPLACE INTO inspection_extra VALUES (?,?)",
+                         [(i["inspection_id"], i.get("recorded_at")) for i in ins if i.get("recorded_at")])
         raw_spill = {i["inspection_id"]: _b(i.get("spill_detected")) for i in ins}
 
         for m in read_jsonl(adir / "maintenance.jsonl", warn):
@@ -105,6 +117,10 @@ def load_dataset(conn, data_dir: Path, name: str, warn: list[str]) -> dict:
                           m.get("contractor"), m.get("downtime_hours"), cost.get("labor"), cost.get("parts"),
                           cost.get("total"), m.get("triggered_by_inspection_id"), m.get("report_file"), name))
             stats["maintenance"] += 1
+            cr = m.get("cost_revision")
+            if cr:
+                conn.execute("INSERT OR REPLACE INTO maintenance_extra VALUES (?,?,?,?)",
+                             (m["maintenance_id"], cr.get("original_total"), cr.get("revised_on"), cr.get("reason")))
             rf = m.get("report_file")
             if rf:
                 rpath = adir / rf
@@ -121,6 +137,11 @@ def load_dataset(conn, data_dir: Path, name: str, warn: list[str]) -> dict:
                          facts["action_required"], facts["action_required_text"], facts["compliance_json"],
                          m["maintenance_id"]))
                     chunks += docsearch.chunk_report(m["maintenance_id"], m.get("asset_id", wid), str(rpath), text)
+                    ex = parse_extra(text, facts["root_cause"], cats)
+                    conn.execute("INSERT OR REPLACE INTO report_extra VALUES (?,?,?,?,?,?,?,?,?,?,?)",
+                                 (m["maintenance_id"], m.get("asset_id", wid), ex["pump_model"], ex["pump_serial"],
+                                  ex["pump_lot"], ex["followup"], ex["delay_days"], ex["delay_reason"],
+                                  ex["soil_sample_sent"], ex["h2s_ppm"], ex["failure_category"]))
                     stats["reports"] += 1
                 else:
                     warn.append(f"{m['maintenance_id']}: report_file {rf} not found")
@@ -142,6 +163,12 @@ def load_dataset(conn, data_dir: Path, name: str, warn: list[str]) -> dict:
                           c.get("note_type"), c.get("inspection_id"), c.get("text"), c.get("valid_from"),
                           c.get("valid_to"), name))
             stats["notes"] += 1
+            if c.get("note_type") == "data_correction" and c.get("inspection_id") and c.get("field"):
+                conn.execute("INSERT OR REPLACE INTO corrections VALUES (?,?,?,?,?,?,?,?,?,?,?,?)",
+                             (f"COR-{nid}", c["inspection_id"], c["field"], str(c.get("corrected_value")),
+                              str(c.get("original_value")), "dataset", nid, c.get("author_user_id"),
+                              c.get("created_at"), c.get("text"), "confirmed", name))
+                stats["corrections"] += 1
             if (c.get("note_type") == "correction" and c.get("inspection_id")
                     and NOT_A_SPILL.search(c.get("text", "")) and not DETECTION_STANDS.search(c.get("text", ""))):
                 conn.execute("INSERT OR REPLACE INTO corrections VALUES (?,?,?,?,?,?,?,?,?,?,?,?)",

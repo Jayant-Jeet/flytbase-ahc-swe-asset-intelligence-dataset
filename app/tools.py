@@ -8,7 +8,7 @@ import re
 import sqlite3
 from datetime import date
 
-from . import compliance, config, memory, metrics, visuals
+from . import compliance, config, memory, metrics, ops, visuals
 from .docsearch import DocIndex
 
 SHUTDOWN_RE = re.compile(r"shut[\s-]?in|shut\s?down|workover|offline|out of service|restart|rig", re.I)
@@ -409,7 +409,12 @@ TOOLS: dict[str, dict] = {
                                           "since": {"type": "string", "description": "YYYY-MM-DD; omit for 'now'"},
                                           "until": {"type": "string"}, "duration_days": {"type": "integer"},
                                           "rule_key": {"type": "string", "description": "e.g. rca_trigger_corrective_count"},
-                                          "rule_value": {"type": "number"}, "reason": {"type": "string"}},
+                                          "rule_value": {"type": "number"}, "reason": {"type": "string"},
+                                          "kind": {"type": "string", "enum": ["pump_replaced"],
+                                                   "description": "pump_replaced: user says a recalled pump was replaced "
+                                                   "(scope_type well). Stored as shared, attributed, UNVERIFIED."},
+                                          "second_hand": {"type": "boolean", "description": "true when the user only heard it from someone else"},
+                                          "heard_from": {"type": "string", "description": "who told the user"}},
                                          ["scope_type", "scope_id", "text"])},
     "confirm_fact": {"fn": memory.confirm_fact, "needs_user": True,
                      "description": "Record the user's answer to a confirmation request: confirm or withdraw a fact.",
@@ -429,7 +434,50 @@ TOOLS: dict[str, dict] = {
                "facts about a well. If none exist it says so; never substitute another user's history.",
                "parameters": _obj({"when": {"type": "string", "enum": ["today", "yesterday", "last_week", "earlier", "all"]},
                                    "topic": {"type": "string"}, "well_id": {"type": "string"}}, [])},
+    "gas_odor_responses": {"fn": ops.gas_odor_responses, "description": "OPS-1: every operator note reporting gas/H2S since a "
+                           "date, the first field response (maintenance job or manual inspection) and whether the 24h/12h "
+                           "deadline was met. Deadlines are read from the SOP.",
+                           "parameters": _obj({"since": {"type": "string", "description": "YYYY-MM-DD"}, "until": {"type": "string"}}, ["since"])},
+    "temporary_bypasses": {"fn": ops.temporary_bypasses, "description": "OPS-2: temporary flowline bypass episodes (note in -> "
+                           "note out), the MOC memo approving each (with extensions), and Allowed / Expired / Not approved.",
+                           "parameters": _obj({}, [])},
+    "regulator_letter_spills": {"fn": ops.regulator_letter_spills, "description": "Spills covered by the regulator's soil-sampling "
+                                "letter and whether each clean-up report records the soil samples being sent (compliant or not).",
+                                "parameters": _obj({}, [])},
+    "status_conflicts": {"fn": ops.status_conflicts, "description": "OPS-3: wells where the latest inspection and the latest "
+                         "operator shut-in/restart note disagree, with the real status now (newer source wins).",
+                         "parameters": _obj({"scope": _SCOPE}, [])},
+    "recalled_pumps": {"fn": ops.recalled_pumps, "needs_user": True,
+                       "description": "Supplier-recall pumps still in the ground (current pump per well, lots from the recall "
+                       "notice), with install cost, and any user claims of replacement flagged as unverified. Applies the "
+                       "current user's private display preferences. scope: all, an area, or 'my area'.",
+                       "parameters": _obj({"scope": _SCOPE}, [])},
+    "team_info": {"fn": ops.team_info, "description": "A team's lead and number of wells it runs today (uses team history).",
+                  "parameters": _obj({"team": {"type": "string", "description": "team name or id, e.g. Northwest Production"}}, ["team"])},
+    "freeze_protection_check": {"fn": ops.freeze_protection_check, "description": "OPS-5: cold-weather heat trace checks; lists "
+                                "producing-well cold readings that got no check within the SOP window.",
+                                "parameters": _obj({"since": {"type": "string"}, "until": {"type": "string"}}, [])},
+    "repair_delay_reasons": {"fn": ops.repair_delay_reasons, "description": "Why wells stayed shut in longer than the repair "
+                             "itself: reasons by area for jobs started in a year, share, typical extra days, stacked-bar series.",
+                             "parameters": _obj({"year": {"type": "integer"}, "scope": _SCOPE}, [])},
+    "area_temperature_comparison": {"fn": ops.area_temperature_comparison, "description": "Ambient and wellhead temperature by "
+                                    "area and month with a consistency measure (for 'which area runs hotter').",
+                                    "parameters": _obj({**_PERIOD}, [])},
+    "operator_complaints": {"fn": ops.operator_complaints, "description": "Wells whose operator notes (last month by default) "
+                            "describe abnormal sound/behaviour, with no corrective repair since, ranked by a transparent score "
+                            "with note quotes, other warning signs and last repair.",
+                            "parameters": _obj({"since": {"type": "string"}, "top_n": {"type": "integer"}}, [])},
+    "set_preference": {"fn": ops.set_preference, "needs_user": True,
+                       "description": "Save a PRIVATE display preference for the current user only (sort_order like "
+                       "'area,well_id'; cost_unit 'thousands'). Not shared with anyone.",
+                       "parameters": _obj({"key": {"type": "string", "enum": ["sort_order", "cost_unit"]},
+                                           "value": {"type": "string"}}, ["key", "value"])},
+    "data_inventory": {"fn": ops.data_inventory, "description": "What fields the dataset contains. Call it when a question "
+                       "needs data that may not exist (pressure, oil volumes) before answering.", "parameters": _obj({}, [])},
 }
+
+
+_NO_LOG = {"render_visual", "remember_fact", "confirm_fact", "record_correction", "set_preference"}
 
 
 def tool_specs() -> list[dict]:
@@ -454,6 +502,6 @@ def call_tool(conn, name: str, args: dict | None, user_id: str | None = None, co
         res = t["fn"](conn, **args)
     except (ValueError, sqlite3.Error) as e:
         return {"error": str(e)}
-    if conv_id and user_id and name != "render_visual" and (name == "recall" or not t.get("needs_user")):
+    if conv_id and user_id and name not in _NO_LOG:
         memory.log_tool_call(conn, conv_id, user_id, name, {k: v for k, v in args.items() if k != "user_id"}, res)
     return res

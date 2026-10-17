@@ -36,6 +36,11 @@ def chunk_fleet_doc(doc: FleetDoc) -> list[dict]:
     title = re.search(r"^#\s+(.+)$", doc.text, re.M)
     title = title.group(1) if title else doc.doc_id
     parts = re.split(r"^(#{2,3})\s+(.+)$", doc.text, flags=re.M)
+    if len(parts) == 1 or parts[0].strip().count("\n") > 3:
+        pre = re.sub(r"^#\s+.+$", "", parts[0], count=1, flags=re.M).strip()
+        chunks.append({"chunk_id": f"{doc.doc_id}#intro", "doc_id": doc.doc_id, "doc_type": doc.kind,
+                       "path": str(doc.path), "asset_id": None, "section": "intro",
+                       "text": f"{title}\n{pre}"})
     for i in range(1, len(parts), 3):
         heading, body = parts[i + 1].strip(), parts[i + 2].strip()
         num = re.match(r"([\d.]+)", heading)

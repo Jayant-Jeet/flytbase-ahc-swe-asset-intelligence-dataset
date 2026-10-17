@@ -66,8 +66,8 @@ function renderVisual(spec) {
       options: {
         maintainAspectRatio: false, color: "#e6edf3",
         scales: {
-          x: { title: { display: !!spec.x_label, text: spec.x_label, color: "#8b9bab" }, ticks: { color: "#8b9bab" }, grid: { color: "#263442" } },
-          y: { title: { display: !!spec.y_label, text: spec.y_label, color: "#8b9bab" }, ticks: { color: "#8b9bab" }, grid: { color: "#263442" } },
+          x: { stacked: !!d.stacked && !line, title: { display: !!spec.x_label, text: spec.x_label, color: "#8b9bab" }, ticks: { color: "#8b9bab" }, grid: { color: "#263442" } },
+          y: { stacked: !!d.stacked && !line, title: { display: !!spec.y_label, text: spec.y_label, color: "#8b9bab" }, ticks: { color: "#8b9bab" }, grid: { color: "#263442" } },
         },
         plugins: { legend: { labels: { color: "#e6edf3" } } },
       },

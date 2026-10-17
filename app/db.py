@@ -67,6 +67,20 @@ CREATE TABLE IF NOT EXISTS messages (
   role TEXT, content TEXT, tool_name TEXT, tool_args TEXT, wells_json TEXT);
 CREATE INDEX IF NOT EXISTS ix_msg_user ON messages(user_id, day);
 CREATE TABLE IF NOT EXISTS kv (key TEXT PRIMARY KEY, value TEXT);
+CREATE TABLE IF NOT EXISTS user_prefs (user_id TEXT, pref_key TEXT, pref_value TEXT, created_at TEXT,
+  PRIMARY KEY (user_id, pref_key));
+CREATE TABLE IF NOT EXISTS well_extra (asset_id TEXT PRIMARY KEY, status TEXT, decommissioned_on TEXT);
+CREATE TABLE IF NOT EXISTS inspection_extra (inspection_id TEXT PRIMARY KEY, recorded_at TEXT);
+CREATE TABLE IF NOT EXISTS maintenance_extra (
+  maintenance_id TEXT PRIMARY KEY, cost_original REAL, cost_revised_on TEXT, cost_revision_reason TEXT);
+CREATE TABLE IF NOT EXISTS well_type_history (asset_id TEXT, well_type TEXT, from_date TEXT, to_date TEXT);
+CREATE INDEX IF NOT EXISTS ix_wth ON well_type_history(asset_id);
+CREATE TABLE IF NOT EXISTS well_team_history (asset_id TEXT, team_id TEXT, from_date TEXT, to_date TEXT);
+CREATE INDEX IF NOT EXISTS ix_wtmh ON well_team_history(asset_id);
+CREATE TABLE IF NOT EXISTS report_extra (
+  maintenance_id TEXT PRIMARY KEY, asset_id TEXT, pump_model TEXT, pump_serial TEXT, pump_lot TEXT,
+  followup TEXT, delay_days REAL, delay_reason TEXT, soil_sample_sent INTEGER, h2s_ppm REAL,
+  failure_category TEXT);
 CREATE TABLE IF NOT EXISTS doc_chunks (
   chunk_id TEXT PRIMARY KEY, doc_id TEXT, doc_type TEXT, path TEXT, asset_id TEXT,
   section TEXT, text TEXT);
@@ -107,7 +121,7 @@ WHERE c.status IN ('confirmed', 'applied', 'unconfirmed_applied')
 CREATE VIEW inspection_effective AS
 SELECT
   i.inspection_id, i.asset_id, i.inspected_at, i.inspected_date, i.inspector_user_id, i.method,
-  w.well_type, w.area_id, w.name AS well_name,
+  COALESCE(h.well_type, w.well_type) AS well_type, w.area_id, w.name AS well_name,
   i.ambient_temp_c AS raw_ambient_temp_c, i.wellhead_temp_c AS raw_wellhead_temp_c,
   COALESCE(CAST(ca.new_value AS REAL), i.ambient_temp_c) AS ambient_temp_c,
   COALESCE(CAST(cw.new_value AS REAL), i.wellhead_temp_c) AS wellhead_temp_c,
@@ -129,8 +143,10 @@ SELECT
    OR cs.correction_id IS NOT NULL OR cv.correction_id IS NOT NULL) AS corrected
 FROM inspections i
 JOIN wells w ON w.asset_id = i.asset_id
+LEFT JOIN well_type_history h ON h.asset_id = i.asset_id AND h.from_date <= i.inspected_date
+                 AND (h.to_date IS NULL OR h.to_date >= i.inspected_date)
 LEFT JOIN rules_effective r ON r.rule_key = 'producing_min_delta_c' AND r.scope_type = 'well_type'
-                 AND r.scope_id = w.well_type
+                 AND r.scope_id = COALESCE(h.well_type, w.well_type)
 LEFT JOIN corrections_active cw ON cw.inspection_id = i.inspection_id AND cw.field = 'wellhead_temp_c'
 LEFT JOIN corrections_active ca ON ca.inspection_id = i.inspection_id AND ca.field = 'ambient_temp_c'
 LEFT JOIN corrections_active cs ON cs.inspection_id = i.inspection_id AND cs.field = 'spill_detected'
@@ -162,7 +178,8 @@ def reset_data(conn: sqlite3.Connection) -> None:
     # facts, user corrections, conversations and messages are memory, not data: they survive a re-ingest
     conn.execute("DELETE FROM corrections WHERE source='dataset'")
     for t in ("datasets", "teams", "areas", "users", "wells", "inspections", "maintenance",
-              "regulatory_events", "notes", "rules", "report_facts", "doc_chunks"):
+              "regulatory_events", "notes", "rules", "report_facts", "doc_chunks", "well_extra", "inspection_extra",
+              "maintenance_extra", "well_type_history", "well_team_history", "report_extra"):
         conn.execute(f"DROP TABLE IF EXISTS {t}")
     conn.commit()
     init_schema(conn)

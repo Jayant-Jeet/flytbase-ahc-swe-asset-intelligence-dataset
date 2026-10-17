@@ -53,6 +53,7 @@ into `rules/rules.json` (review it) and tools read thresholds from the `rules` t
 ```powershell
 python -m pytest tests -q                          # unit tests
 python -m tests.eval_questions -v                  # all 18 sheet questions, deterministic tool-level checks
+python -m tests.eval_questions --set final         # the 11 final questions on test-data\dataset (TODAY=2027-01-15, rules\rules_test.json)
 python -m tests.eval_questions --llm               # end to end through the model (needs an API key)
 python -m tests.eval_questions --only 12 14 --data-dir path\to\other
 ```

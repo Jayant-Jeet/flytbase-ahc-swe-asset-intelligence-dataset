@@ -62,6 +62,7 @@ class Series(BaseModel):
 
 class Chart(BaseModel):
     series: list[Series] = Field(min_length=1)
+    stacked: bool = False
 
     @model_validator(mode="after")
     def _size(self):
@@ -142,7 +143,8 @@ PARAMS = {
         "bar_chart | map | heatmap. data by type: "
         "status_card {well_id, headline, producing(true/false/null), fields:[{label,value}], notes:[str]}; "
         "table {columns:[str], rows:[[...]]}; "
-        "line_chart/bar_chart {series:[{name, points:[{x,y}]}]} (x = date or category, y = number copied from a tool result); "
+        "line_chart/bar_chart {series:[{name, points:[{x,y}]}], stacked?:true} (x = date or category, y = number copied from a tool result; "
+        "stacked:true on bar_chart stacks the series, e.g. delay reasons per area); "
         "map {markers:[{lat,lon,label,status?:producing|not_producing|unknown|alert,detail?}]}; "
         "heatmap {x_labels:[str], y_labels:[str], values:[[number]] (one row per y label)}. "
         "Use only numbers returned by tools.")}},

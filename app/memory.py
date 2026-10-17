@@ -59,7 +59,7 @@ def _uname(conn, uid):
 
 def reset(conn) -> None:
     """Clear all memory (facts, user corrections, conversations). Dataset rows are untouched."""
-    for t in ("facts", "conversations", "messages", "kv"):
+    for t in ("facts", "conversations", "messages", "kv", "user_prefs"):
         conn.execute(f"DELETE FROM {t}")
     conn.execute("DELETE FROM corrections WHERE source='user'")
     conn.execute("DELETE FROM sqlite_sequence WHERE name IN ('facts','messages')")
@@ -141,7 +141,8 @@ def _norm_date(s: str | None, field: str) -> str | None:
 
 def remember_fact(conn, user_id: str, scope_type: str, scope_id: str, text: str, state: str | None = None,
                   since: str | None = None, until: str | None = None, duration_days: int | None = None,
-                  rule_key: str | None = None, rule_value: float | None = None, reason: str | None = None) -> dict:
+                  rule_key: str | None = None, rule_value: float | None = None, reason: str | None = None,
+                  kind: str | None = None, second_hand: bool = False, heard_from: str | None = None) -> dict:
     """Store a user claim as shared knowledge. Claims that disagree with the data or other facts are kept as
     'unconfirmed' and returned with both sources so the user can be asked to confirm."""
     u = _user(conn, user_id)
@@ -157,6 +158,25 @@ def remember_fact(conn, user_id: str, scope_type: str, scope_id: str, text: str,
     elif scope_type == "well_type":
         if not conn.execute("SELECT 1 FROM wells WHERE well_type=? LIMIT 1", (scope_id,)).fetchone():
             raise ValueError(f"unknown well type {scope_id!r}")
+
+    if kind == "pump_replaced":
+        if scope_type != "well":
+            raise ValueError("a pump_replaced claim needs scope_type 'well'")
+        payload = {"kind": "pump_replaced", "verified": False, "second_hand": bool(second_hand),
+                   "heard_from": heard_from, "claimed_on": config.today().isoformat()}
+        status = "unconfirmed" if second_hand else "confirmed"
+        fid = add_fact(conn, "well", wid, text, payload, user_id, status, reason=reason)
+        conn.commit()
+        out = {"fact_id": fid, "status": status, "kind": "pump_replaced", "well_id": wid, "recorded_by": u["name"],
+               "verified_by_maintenance_record": False, "second_hand": bool(second_hand), "heard_from": heard_from,
+               "evidence_ids": [fid]}
+        out["note"] = ("Saved as a shared, attributed, UNVERIFIED claim: no maintenance record shows the replacement. "
+                       "Recall lists will show this well with the claim and who made it.")
+        if second_hand:
+            out["note"] = ("This is second-hand (the user was told by someone else), so it is saved as UNCONFIRMED and the "
+                           "well stays on the recall list. Say so, name who heard it from whom, and ask for the work order "
+                           "or the first-hand source to confirm.")
+        return out
 
     if rule_key is not None:
         if scope_type != "well_type":

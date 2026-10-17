@@ -313,7 +313,18 @@ def main(argv=None) -> int:
     ap.add_argument("--only", type=int, nargs="*", help="question numbers to run")
     ap.add_argument("--data-dir", action="append", help="dataset folder (repeatable)")
     ap.add_argument("-v", "--verbose", action="store_true", help="list every check, not only failures")
+    ap.add_argument("--set", choices=["sample", "final"], default="sample",
+                    help="'final' = the 11 final questions on test-data/dataset (today = 2027-01-15)")
     a = ap.parse_args(argv)
+    tool_checks, scenarios = TOOL_CHECKS, LLM_SCENARIOS
+    if a.set == "final":
+        from tests.final_questions import FINAL_SCENARIOS, FINAL_TOOL_CHECKS
+        tool_checks, scenarios = FINAL_TOOL_CHECKS, FINAL_SCENARIOS
+        os.environ.setdefault("DATA_DIR", "test-data/dataset")
+        if not a.data_dir and "test-data" not in os.environ.get("DATA_DIR", ""):
+            os.environ["DATA_DIR"] = "test-data/dataset"
+        os.environ["TODAY"] = "2027-01-15"
+        os.environ["RULES_PATH"] = "rules/rules_test.json"
     if a.data_dir:
         os.environ["DATA_DIR"] = os.pathsep.join(a.data_dir)
 
@@ -331,15 +342,15 @@ def main(argv=None) -> int:
         provider = get_provider()
 
     rows, failures = [], []
-    for q in sorted(a.only or TOOL_CHECKS):
+    for q in sorted(a.only or tool_checks):
         t0 = time.time()
         try:
             if a.llm:
                 state, checks = {"conv": None, "user": None}, []
-                for turn in LLM_SCENARIOS[q]:
+                for turn in scenarios[q]:
                     checks += run_llm_turn(ctx, provider, turn, state)
             else:
-                checks = TOOL_CHECKS[q](ctx)
+                checks = tool_checks[q](ctx)
         except Exception as e:  # a crashing question must not hide the others
             checks = [(f"crashed: {type(e).__name__}: {e}", False)]
         ok = all(v for _, v in checks)
